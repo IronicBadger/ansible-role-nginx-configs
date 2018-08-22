@@ -1,34 +1,22 @@
 ---
-- name: install nginx default config for letsencrypt
-  copy:
-    src: "{{ playbook_dir }}/files/nginx-confs/nginx-default"
-    dest: "{{ appdata_path }}/letsencrypt/config/nginx/site-confs/default"
-    owner: "{{ docker_uid }}"
-    mode: 0664
-  register: nginxdefault
 
-- name: install enabled nginx subfolder configs
-  copy:
-    src: "{{ playbook_dir }}/files/nginx-confs/services/{{ item.service_name }}.conf"
-    dest: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
-    owner: "{{ docker_uid }}"
-    mode: 0664
-  when: item.active == true and item.rp_enabled == true
+- name: install default nginx config
+  include: default-config.yml
+
+- name: install nginx subdomain configs
+  include: subdomains.yml
+  when:
+    - item.rp_type == "subdom"
   with_items:
     - "{{ containers }}"
-  register: nginxconfigsinstalled
 
-- name: remove disabled nginx configs
-  file:
-    path: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
-    state: absent
-  when: 
-    - item.active == false or item.rp_enabled == false
+- name: install nginx subfolder configs
+  include: subfolders.yml
+  when:
+    - item.rp_type == "subfol"
   with_items:
     - "{{ containers }}"
-  register: nginxconfigsremoved
 
 - name: restart letsencrypt container if configs changed
   command: docker restart le
-  when: nginxconfigsinstalled.changed or nginxconfigsremoved.changed or nginxdefault.changed
-  ignore_errors: true
+  when: restart_le
