@@ -7,9 +7,9 @@
     mode: 0664
   register: nginxdefault
 
-- name: install enabled nginx configs
+- name: install enabled nginx subfolder configs
   copy:
-    src: "{{ playbook_dir }}/files/nginx-confs/subfolders/{{ item.service_name }}.conf"
+    src: "{{ playbook_dir }}/files/nginx-confs/services/{{ item.service_name }}.conf"
     dest: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
     owner: "{{ docker_uid }}"
     mode: 0664
