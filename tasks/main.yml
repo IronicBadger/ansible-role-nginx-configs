@@ -1,0 +1,34 @@
+---
+- name: install nginx default config for letsencrypt
+  copy:
+    src: "../files/nginx-confs/nginx-default"
+    dest: "{{ appdata_path }}/letsencrypt/config/nginx/site-confs/default"
+    owner: "{{ docker_uid }}"
+    mode: 0664
+  register: nginxdefault
+
+- name: install enabled nginx configs
+  copy:
+    src: "../files/nginx-confs/subfolders/{{ item.service_name }}.conf"
+    dest: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
+    owner: "{{ docker_uid }}"
+    mode: 0664
+  when: item.active == true and item.rp_enabled == true
+  with_items:
+    - "{{ containers }}"
+  register: nginxconfigsinstalled
+
+- name: remove disabled nginx configs
+  file:
+    path: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
+    state: absent
+  when: 
+    - item.active == false or item.rp_enabled == false
+  with_items:
+    - "{{ containers }}"
+  register: nginxconfigsremoved
+
+- name: restart letsencrypt container if configs changed
+  command: docker restart le
+  when: nginxconfigsinstalled.changed or nginxconfigsremoved.changed or nginxdefault.changed
+  ignore_errors: true
