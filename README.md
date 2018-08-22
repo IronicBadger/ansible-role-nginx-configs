@@ -9,6 +9,7 @@ containers:
   - service_name: example
     active: true
     rp_enabled: true
+    rp_type: subdom
     image: linuxserver/example
     container_name: example
     volumes:
