@@ -1,7 +1,7 @@
 ---
 - name: install nginx default config for letsencrypt
   copy:
-    src: "{{ playbook_dir }}/files/{{ ansible_hostname }}/nginx-confs/nginx-default"
+    src: "{{ playbook_dir }}/files/nginx-confs/nginx-default"
     dest: "{{ appdata_path }}/letsencrypt/config/nginx/site-confs/default"
     owner: "{{ docker_uid }}"
     mode: 0664
@@ -9,7 +9,7 @@
 
 - name: install enabled nginx configs
   copy:
-    src: "{{ playbook_dir }}/files/{{ ansible_hostname }}/nginx-confs/subfolders/{{ item.service_name }}.conf"
+    src: "{{ playbook_dir }}/files/nginx-confs/subfolders/{{ item.service_name }}.conf"
     dest: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
     owner: "{{ docker_uid }}"
     mode: 0664
