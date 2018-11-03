@@ -1,4 +1,13 @@
 ---
+- name: create directories
+  file:
+    path: {{ item }}
+    owner: "{{ docker_uid }}"
+    mode: 0664
+    state: directory
+  with_items:
+    - "{{ appdata_path }}/letsencrypt/config/nginx/site-confs"
+    - "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs"
 
 - name: install nginx default config for letsencrypt
   copy:
