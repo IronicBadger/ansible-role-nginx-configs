@@ -1,7 +1,7 @@
 ---
 - name: create directories
   file:
-    path: {{ item }}
+    path: "{{ item }}"
     owner: "{{ docker_uid }}"
     mode: 0664
     state: directory
