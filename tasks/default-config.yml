@@ -1,19 +1,19 @@
 ---
 - name: create directories
   file:
-    path: "{{ item }}"
-    owner: "{{ docker_uid }}"
+    path: "{{ nginx_configs_conf_dir_main }}/{{ item }}"
+    owner: "{{ main_uid }}"
     mode: 0664
     state: directory
   with_items:
-    - "{{ appdata_path }}/letsencrypt/config/nginx/site-confs"
-    - "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs"
+    - "site-confs"
+    - "proxy-confs"
 
-- name: install nginx default config for letsencrypt
+- name: install default nginx config for letsencrypt
   copy:
-    src: "{{ playbook_dir }}/files/nginx-confs/nginx-default"
-    dest: "{{ appdata_path }}/letsencrypt/config/nginx/site-confs/default"
-    owner: "{{ docker_uid }}"
+    src: "{{ nginx_configs_conf_dir_local }}/nginx-default"
+    dest: "{{ nginx_configs_conf_dir_main }}/site-confs/default"
+    owner: "{{ main_uid }}"
     mode: 0664
   register: nginx_default
 

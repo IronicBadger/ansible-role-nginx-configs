@@ -2,26 +2,26 @@
 
 - name: install enabled nginx subfolder configs
   copy:
-    src: "{{ playbook_dir }}/files/nginx-confs/subfolders/{{ item.service_name }}.conf"
-    dest: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
-    owner: "{{ docker_uid }}"
+    src: "{{ nginx_configs_conf_dir_local }}/subfolders/{{ item.service_name }}.conf"
+    dest: "{{ nginx_configs_conf_dir_main }}/proxy-confs/{{ item.service_name }}.conf"
+    owner: "{{ main_uid }}"
     mode: 0664
   when: 
   - item.active == true 
-  - item.rp_enabled == true
+  - item.nginx_configs_rp_enabled == true
   register: nginx_subfol
 
 - name: remove disabled subfolder nginx configs
   file:
-    path: "{{ appdata_path }}/letsencrypt/config/nginx/proxy-confs/{{ item.service_name }}.conf"
+    path: "{{ nginx_configs_conf_dir_main }}/proxy-confs/{{ item.service_name }}.conf"
     state: absent
   when: 
-    - item.active == false or item.rp_enabled == false
+    - item.active == false or item.nginx_configs_rp_enabled == false
   register: nginx_rem_subfol
 
 - name: decide whether to restart letsencrypt container
   set_fact:
-    restart_le: True
+    nginx_configs_restart_le: True
   when: >
     nginx_subfol.changed
     or nginx_rem_subfol.changed

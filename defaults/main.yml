@@ -1,3 +1,12 @@
 ---
+# expects to run in conjunction with ironicbadger.docker_compose_generator
+appdata_path: /opt/appdata
+main_uid: ""
+main_gid: ""
 
-restart_le: False
+nginx_configs_restart_le: False
+nginx_configs_rp_enabled: false
+nginx_configs_rp_type: ""
+
+nginx_configs_conf_dir_local: "{{ playbook_dir }}/files/nginx-confs"
+nginx_configs_conf_dir_main: "{{ appdata_path }}/letsencrypt/config/nginx"

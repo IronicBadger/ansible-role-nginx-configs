@@ -6,14 +6,14 @@
 - name: install nginx subdomain configs
   include: subdomains.yml
   when:
-    - item.rp_type == "subdom"
+    - item.nginx_configs_rp_type == "subdom"
   with_items:
     - "{{ containers }}"
 
 - name: install nginx subfolder configs
   include: subfolders.yml
   when:
-    - item.rp_type == "subfol"
+    - item.nginx_configs_rp_type == "subfol"
   with_items:
     - "{{ containers }}"
 
