@@ -4,7 +4,7 @@ appdata_path: /opt/appdata
 main_uid: ""
 main_gid: ""
 
-nginx_configs_restart_le: False
+nginx_configs_restart_le: false
 nginx_configs_rp_enabled: false
 nginx_configs_rp_type: ""
 

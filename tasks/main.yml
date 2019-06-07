@@ -19,4 +19,4 @@
 
 - name: restart letsencrypt container if configs changed
   command: docker restart le
-  when: restart_le
+  when: nginx_configs_restart_le
